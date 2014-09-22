@@ -35,31 +35,38 @@ public class MainActivity extends Activity implements OnClickListener {
                     int id=count ++;
                     @Override
                     public void execute() {
-                        Log.e(TAG, "Task " + id + " start");
+                        log("Task " + id + " start");
                         try {
-                            Thread.sleep(3000);
-                            Log.e(TAG, "Task " + id + " running");
-                            Thread.sleep(3000);
+                            Thread.sleep(2000);
+                            log("Task " + id + " running");
+                            Thread.sleep(2000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        Log.e(TAG, "Task " + id + " end");
+                        log("Task " + id + " end");
                     }
                 });
                 break;
             case R.id.btn2:
                 pool.shutdown();
+                pool = new ThreadPool(4);
+                count = 0;
                 break;
             case R.id.btn3:
-                Log.e(TAG, "running Task count=" + pool.getRunningTasks().size());
-                Log.e(TAG, "pending Task count=" + pool.getPendingTasks().size());
+                log("running Task count=" + pool.getRunningTasks().size());
+                log("pending Task count=" + pool.getPendingTasks().size());
                 break;
         }
     }
 
-    void log(String log) {
+    void log(final String log) {
         Log.e(TAG, log);
-        text.setText(log + "\n" + text.getText());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setText(log + "\n" + text.getText());
+            }
+        });
     }
 
 }
